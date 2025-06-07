@@ -244,3 +244,12 @@ class ContractConfig:
 class PostOrdersArgs:
     order: SignedOrder
     orderType: OrderType = OrderType.GTC
+
+@dataclass
+class PriceHistoryArgs:
+    market: str
+    startTs: int = None
+    end: int = None
+    interval: str = None
+    fidelity: int = None
+

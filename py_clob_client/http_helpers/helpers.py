@@ -32,11 +32,11 @@ def overloadHeaders(method: str, headers: dict) -> dict:
     return headers
 
 
-def request(endpoint: str, method: str, headers=None, data=None):
+def request(endpoint: str, method: str, headers=None, data=None, params=None):
     try:
         headers = overloadHeaders(method, headers)
         resp = requests.request(
-            method=method, url=endpoint, headers=headers, json=data if data else None
+            method=method, url=endpoint, headers=headers, json=(data if data else None), params=params
         )
         if resp.status_code != 200:
             raise PolyApiException(resp)
@@ -54,8 +54,8 @@ def post(endpoint, headers=None, data=None):
     return request(endpoint, POST, headers, data)
 
 
-def get(endpoint, headers=None, data=None):
-    return request(endpoint, GET, headers, data)
+def get(endpoint, headers=None, data=None, params=None):
+    return request(endpoint, GET, headers, data, params=params)
 
 
 def delete(endpoint, headers=None, data=None):

@@ -46,6 +46,7 @@ from .endpoints import (
     GET_PRICES,
     GET_SPREAD,
     GET_SPREADS,
+    GET_PRICE_HISTORY,
 )
 from .clob_types import (
     ApiCreds,
@@ -65,6 +66,7 @@ from .clob_types import (
     BookParams,
     MarketOrderArgs,
     PostOrdersArgs,
+    PriceHistoryArgs,
 )
 from .exceptions import PolyException
 from .http_helpers.helpers import (
@@ -771,3 +773,8 @@ class ClobClient:
             return self.builder.calculate_sell_market_price(
                 book.bids, amount, order_type
             )
+
+    def get_price_history(self, params: PriceHistoryArgs):
+        uri = "{}{}".format(self.host, GET_PRICE_HISTORY)
+        params = {key: value for key, value in params.__dict__.items() if value is not None}
+        return get(uri, params=params)
