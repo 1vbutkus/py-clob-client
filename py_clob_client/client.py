@@ -524,39 +524,26 @@ class ClobClient:
         self.assert_level_2_auth()
         request_args = RequestArgs(method="GET", request_path=ORDERS)
         headers = create_level_2_headers(self.signer, self.creds, request_args)
+        url = add_query_open_orders_params(
+            "{}{}".format(self.host, ORDERS), params, next_cursor
+        )
+        return get(url, headers=headers)
 
-        results = []
-        next_cursor = next_cursor if next_cursor is not None else "MA=="
-        while next_cursor != END_CURSOR:
-            url = add_query_open_orders_params(
-                "{}{}".format(self.host, ORDERS), params, next_cursor
-            )
-            response = get(url, headers=headers)
-            next_cursor = response["next_cursor"]
-            results += response["data"]
 
-        return results
-
-    def get_order_book(self, token_id) -> OrderBookSummary:
+    def get_order_book(self, token_id: str) -> dict:
         """
         Fetches the orderbook for the token_id
         """
         raw_obs = get("{}{}?token_id={}".format(self.host, GET_ORDER_BOOK, token_id))
-        return parse_raw_orderbook_summary(raw_obs)
+        return raw_obs
 
-    def get_order_books(self, params: list[BookParams]) -> list[OrderBookSummary]:
+    def get_order_books(self, token_ids: list[str]) -> list[dict]:
         """
         Fetches the orderbook for a set of token ids
         """
-        body = [{"token_id": param.token_id} for param in params]
+        body = [{"token_id": token_id} for token_id in token_ids]
         raw_obs = post("{}{}".format(self.host, GET_ORDER_BOOKS), data=body)
-        return [parse_raw_orderbook_summary(r) for r in raw_obs]
-
-    def get_order_book_hash(self, orderbook: OrderBookSummary) -> str:
-        """
-        Calculates the hash for the given orderbook
-        """
-        return generate_orderbook_summary_hash(orderbook)
+        return raw_obs
 
     def get_order(self, order_id):
         """
@@ -578,17 +565,10 @@ class ClobClient:
         request_args = RequestArgs(method="GET", request_path=TRADES)
         headers = create_level_2_headers(self.signer, self.creds, request_args)
 
-        results = []
-        next_cursor = next_cursor if next_cursor is not None else "MA=="
-        while next_cursor != END_CURSOR:
-            url = add_query_trade_params(
-                "{}{}".format(self.host, TRADES), params, next_cursor
-            )
-            response = get(url, headers=headers)
-            next_cursor = response["next_cursor"]
-            results += response["data"]
-
-        return results
+        url = add_query_trade_params(
+            "{}{}".format(self.host, TRADES), params, next_cursor
+        )
+        return get(url, headers=headers)
 
     def get_last_trade_price(self, token_id):
         """
