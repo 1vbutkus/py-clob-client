@@ -252,18 +252,3 @@ class PriceHistoryArgs:
     end: int = None
     interval: str = None
     fidelity: int = None
-
-@dataclass
-class PositionsArgs:
-    user: str
-    market: str = None
-    sizeThreshold: int | float = None
-    redeemable: bool = None
-    mergeable: bool = None
-    title: str = None
-    eventId: str = None
-    limit: int = None  # max 500
-    offset: int = None
-    sortBy: str = None
-    sortDirection: str = None
-

@@ -47,7 +47,6 @@ from .endpoints import (
     GET_SPREAD,
     GET_SPREADS,
     GET_PRICE_HISTORY,
-    GET_POSITIONS,
 )
 from .clob_types import (
     ApiCreds,
@@ -68,7 +67,6 @@ from .clob_types import (
     MarketOrderArgs,
     PostOrdersArgs,
     PriceHistoryArgs,
-    PositionsArgs,
 )
 from .exceptions import PolyException
 from .http_helpers.helpers import (
